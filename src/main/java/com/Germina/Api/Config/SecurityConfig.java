@@ -1,6 +1,5 @@
 package com.Germina.Api.Config;
 
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,7 +23,7 @@ import java.util.List;
 @EnableWebSecurity
 @RequiredArgsConstructor
 @EnableMethodSecurity
-    public class SecurityConfig {
+public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
     private final AuthenticationProvider authenticationProvider;
@@ -32,44 +31,44 @@ import java.util.List;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
-                .csrf(csrf ->csrf.disable())
-                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Habilitar CORS
-                .authorizeHttpRequests(auth -> auth.requestMatchers(publicEndpoinds()).permitAll()
-                        .anyRequest().authenticated())
-                .sessionManagement(sess ->sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .csrf(csrf -> csrf.disable()) // Desactiva CSRF para API REST
+                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Configura CORS
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(publicEndpoints()).permitAll() // Define endpoints públicos
+                        .anyRequest().authenticated()) // Requiere autenticación para todas las demás rutas
+                .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Sin manejo de sesiones
                 .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-        return httpSecurity.build();
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class); // Añade el filtro JWT
 
+        return httpSecurity.build();
     }
+
+    // Configuración de CORS
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("*")); // URL de tu frontend
+        configuration.setAllowedOrigins(List.of("http://localhost:5175/")); // Define el origen de tu frontend (ajústalo si es necesario)
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
-        configuration.setAllowedHeaders(List.of("*")); // Permitir todos los headers
-        configuration.setAllowCredentials(true); // Permitir el uso de credenciales (cookies, headers de autorización, etc.)
-        configuration.setExposedHeaders(List.of("Authorization", "Content-Type", "Accept"));
+        configuration.setAllowedHeaders(List.of("*")); // Permite todos los headers
+        configuration.setAllowCredentials(true); // Permite el uso de credenciales
+        configuration.setExposedHeaders(List.of("Authorization", "Content-Type", "Accept")); // Expone headers importantes
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
+        source.registerCorsConfiguration("/**", configuration); // Aplica la configuración CORS a todas las rutas
         return source;
     }
 
-
-//Endopoints libres
-
-    private RequestMatcher publicEndpoinds(){
+    // Rutas públicas que no requieren autenticación
+    private RequestMatcher publicEndpoints() {
         return new OrRequestMatcher(
-                new AntPathRequestMatcher("/api/greeting/sayHelloPublic"),
                 new AntPathRequestMatcher("/api/auth/**"),
                 new AntPathRequestMatcher("/api/identification_type/get"),
                 new AntPathRequestMatcher("/api/person_type/get"),
                 new AntPathRequestMatcher("/api/category/get"),
                 new AntPathRequestMatcher("/forgot-password/**"),
-                new AntPathRequestMatcher("/api/request/download/**")
+                new AntPathRequestMatcher("/api/request/download/**"),
+                new AntPathRequestMatcher("/activate/**"),
+                new AntPathRequestMatcher("/api/auth/activate-email") // Ruta específica de activación
         );
     }
-
-    }
-
+}

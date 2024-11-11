@@ -1,6 +1,5 @@
 package com.Germina.Domain.Services;
 
-
 import com.Germina.Api.Config.Exception.Exceptions;
 import com.Germina.Api.Config.models.AuthResponse;
 import com.Germina.Api.Config.models.AuthenticationRequest;
@@ -9,6 +8,7 @@ import com.Germina.Persistence.Entities.Role;
 import com.Germina.Persistence.Entities.User;
 import com.Germina.Persistence.Repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
@@ -30,6 +30,11 @@ public class AuthServiceImpl implements AuthService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
+    // Método para obtener la URL base de la aplicación (puede configurarse según el entorno)
+    private String getBaseUrl() {
+        // En producción, debes reemplazar localhost por tu dominio real
+        return "http://localhost:5175"; // Usa tu URL de dominio real en producción
+    }
 
     @Override
     public AuthResponse register(RegisterRequest request) {
@@ -54,8 +59,10 @@ public class AuthServiceImpl implements AuthService {
         userRepository.save(user);
 
         var jwtToken = jwtService.genereteToken((UserDetails) user);
-        // Enviar correo electrónico de activación
-        String activationLink1 = "localhost:5113/activate/"+jwtToken;
+        // Obtener el enlace de activación con la URL base
+        String baseUrl = getBaseUrl();
+        String activationLink = baseUrl + "/activate/" + jwtToken;
+
         String mensajeHtml = String.format(
                 "<h1>Hola %s</h1>" +
                         "<p>Gracias por iniciar el proceso de verificación de identidad en nuestra plataforma. Para completar la verificación, por favor haz clic en el siguiente enlace:" +
@@ -71,7 +78,7 @@ public class AuthServiceImpl implements AuthService {
                         "<br /><br />" +
                         "<br /><br />" +
                         "PQRSmart<br /><br />" ,
-                user.getFullName(), activationLink1
+                user.getFullName(), activationLink
         );
 
         emailService.sendEmails(
@@ -79,12 +86,12 @@ public class AuthServiceImpl implements AuthService {
                 "Confirma tu correo",
                 mensajeHtml
         );
+
         return AuthResponse.builder()
                 .token(jwtToken).build();
     }
 
-
-
+    // El método registerAdmin sigue el mismo patrón que register
     @Override
     public AuthResponse registerAdmin(RegisterRequest request) {
         // Verificar si el email ya existe
@@ -108,8 +115,10 @@ public class AuthServiceImpl implements AuthService {
         userRepository.save(user);
 
         var jwtToken = jwtService.genereteToken((UserDetails) user);
-        // Enviar correo electrónico de activación
-        String activationLink1 = "localhost:5113/activate/"+jwtToken;
+        // Obtener el enlace de activación con la URL base
+        String baseUrl = getBaseUrl();
+        String activationLink = baseUrl + "/activate/" + jwtToken;
+
         String mensajeHtml = String.format(
                 "<h1>Hola %s</h1>" +
                         "<p>Gracias por iniciar el proceso de verificación de identidad en nuestra plataforma. Para completar la verificación, por favor haz clic en el siguiente enlace:" +
@@ -125,20 +134,21 @@ public class AuthServiceImpl implements AuthService {
                         "<br /><br />" +
                         "<br /><br />" +
                         "PQRSmart<br /><br />" ,
-                user.getFullName(), activationLink1
+                user.getFullName(), activationLink
         );
+        log.info("El enlace de activación generado es: " + activationLink);
 
         emailService.sendEmails(
                 new String[]{user.getMail()},
                 "Confirma tu correo",
                 mensajeHtml
         );
+
         return AuthResponse.builder()
                 .token(jwtToken).build();
     }
 
-
-
+    // Método para la autenticación
     @Override
     public AuthResponse authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(
@@ -159,12 +169,9 @@ public class AuthServiceImpl implements AuthService {
                 .build();
     }
 
+    // Obtener el usuario actual autenticado
     @Override
     public User getCurrentUser(Authentication authentication) {
         return (User) authentication.getPrincipal();
     }
-
-
-
 }
-

@@ -42,7 +42,7 @@ public class AuthController {
     private JwtService jwtService;
 
 
-    @PostMapping("/register")
+    @PostMapping("/registerUser")
     public ResponseEntity<?> Register(@RequestBody RegisterRequest request){
         try {
             // Intentar registrar al usuario
@@ -61,8 +61,8 @@ public class AuthController {
     }
 
 
-    @PostMapping("/registerUser")
-    public ResponseEntity<?> registerUser(@RequestBody RegisterRequest request){
+    @PostMapping("/registerAdmin")
+    public ResponseEntity<?> registerAdmin(@RequestBody RegisterRequest request){
         try {
             // Intentar registrar al usuario
             AuthResponse authResponse = authService.registerAdmin(request);

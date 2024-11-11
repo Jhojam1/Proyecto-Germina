@@ -1,5 +1,6 @@
 package com.Germina.Domain.Services;
 
+import com.Germina.Api.Config.Exception.Exceptions;
 import com.Germina.Domain.Dtos.OrderDTO;
 import com.Germina.Domain.Mappers.OrderMapper;
 import com.Germina.Persistence.Entities.Dish;
@@ -42,7 +43,7 @@ public class OrderService {
         // Obtener la hora límite desde ConfigHrService
         LocalTime cutoffTime = configHrService.getCutoffTime();
         if (LocalTime.now().isAfter(cutoffTime)) {
-            throw new IllegalArgumentException("No se pueden hacer pedidos después de las " + cutoffTime);
+            throw new Exceptions.CutoffTimeExceededException("No se pueden hacer pedidos después de las " + cutoffTime);
         }
 
         // Buscar el plato solicitado en el pedido
@@ -72,10 +73,10 @@ public class OrderService {
 
                 return orderDTO;
             } else {
-                throw new IllegalArgumentException("El plato ha alcanzado el límite de pedidos diarios.");
+                throw new Exceptions.DailyOrderLimitExceededException("El plato ha alcanzado el límite de pedidos diarios.");
             }
         } else {
-            throw new IllegalArgumentException("Plato no encontrado.");
+            throw new Exceptions.DishNotFoundException("Plato no encontrado.");
         }
     }
 }
