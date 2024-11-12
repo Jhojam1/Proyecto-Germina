@@ -33,7 +33,7 @@ public class AuthServiceImpl implements AuthService {
     // Método para obtener la URL base de la aplicación (puede configurarse según el entorno)
     private String getBaseUrl() {
         // En producción, debes reemplazar localhost por tu dominio real
-        return "https://incredible-bienenstitch-7dcefd.netlify.app/"; // Usa tu URL de dominio real en producción
+        return "http://localhost:5183/"; // Usa tu URL de dominio real en producción
     }
 
     @Override
