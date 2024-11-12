@@ -47,7 +47,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5175/")); // Define el origen de tu frontend (ajústalo si es necesario)
+        configuration.setAllowedOrigins(List.of("https://app.netlify.com/")); // Define el origen de tu frontend (ajústalo si es necesario)
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(List.of("*")); // Permite todos los headers
         configuration.setAllowCredentials(true); // Permite el uso de credenciales
@@ -62,11 +62,7 @@ public class SecurityConfig {
     private RequestMatcher publicEndpoints() {
         return new OrRequestMatcher(
                 new AntPathRequestMatcher("/api/auth/**"),
-                new AntPathRequestMatcher("/api/identification_type/get"),
-                new AntPathRequestMatcher("/api/person_type/get"),
-                new AntPathRequestMatcher("/api/category/get"),
-                new AntPathRequestMatcher("/forgot-password/**"),
-                new AntPathRequestMatcher("/api/request/download/**"),
+                new AntPathRequestMatcher("/api/TempUser/saveTempUser"),
                 new AntPathRequestMatcher("/activate/**"),
                 new AntPathRequestMatcher("/api/auth/activate-email") // Ruta específica de activación
         );
