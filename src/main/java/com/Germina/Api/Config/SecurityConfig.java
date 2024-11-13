@@ -47,7 +47,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5183/")); // Define el origen de tu frontend (ajústalo si es necesario)
+        configuration.setAllowedOrigins(List.of("https://navvi.netlify.app/")); // Define el origen de tu frontend (ajústalo si es necesario)
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(List.of("*")); // Permite todos los headers
         configuration.setAllowCredentials(true); // Permite el uso de credenciales
