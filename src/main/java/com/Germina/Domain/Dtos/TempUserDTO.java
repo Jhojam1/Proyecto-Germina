@@ -13,10 +13,11 @@ import lombok.Setter;
 
 
 public class TempUserDTO {
-
     private Long id;
     private String fullName;
     private Long numberIdentification;
+    private String state;
     private String mail;
-
+    private String password;
+    private String role;
 }

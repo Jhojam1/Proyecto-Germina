@@ -62,6 +62,7 @@ public class SecurityConfig {
     private RequestMatcher publicEndpoints() {
         return new OrRequestMatcher(
                 new AntPathRequestMatcher("/api/auth/**"),
+                new AntPathRequestMatcher("/api/TempUser/**"),
                 new AntPathRequestMatcher("/api/TempUser/saveTempUser"),
                 new AntPathRequestMatcher("/activate/**"),
                 new AntPathRequestMatcher("/api/auth/activate-email") // Ruta específica de activación
