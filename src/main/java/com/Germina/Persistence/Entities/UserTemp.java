@@ -1,9 +1,6 @@
 package com.Germina.Persistence.Entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,18 +14,19 @@ import lombok.Setter;
 @Table(name = "Temporal_Usuarios")
 public class UserTemp {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "Nombres_Completos")
     private String fullName;
 
-    @Column(name = "Numero_Identificacion")
+    @Column(name = "Numero_Identificacion", unique = true)
     private Long numberIdentification;
 
     @Column(name = "Estado")
     private String state;
 
-    @Column(name = "Correo")
-    private String mail;
+    @Column(name = "Correo", unique = true)
+    private String mail ;
 
 }

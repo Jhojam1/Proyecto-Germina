@@ -25,13 +25,13 @@ public class User implements UserDetails {
     @Column(name = "Nombres_Completos")
     private String fullName;
 
-    @Column(name = "Numero_Identificacion")
+    @Column(name = "Numero_Identificacion", unique = true)
     private Long numberIdentification;
 
     @Column(name = "Estado")
     private String state;
 
-    @Column(name = "Correo")
+    @Column(name = "Correo", unique = true)
     private String mail;
 
     @Column(name = "Contraseña")

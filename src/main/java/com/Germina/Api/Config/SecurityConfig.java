@@ -63,7 +63,7 @@ public class SecurityConfig {
         return new OrRequestMatcher(
                 new AntPathRequestMatcher("/api/auth/**"),
                 new AntPathRequestMatcher("/api/auth/RegisterUser"),
-                new AntPathRequestMatcher("/api/TempUser/**"),  // Esto incluye saveTempUser
+                new AntPathRequestMatcher("/api/TempUser/**"),
                 new AntPathRequestMatcher("/api/TempUser/saveTempUser"), // Ruta específica de saveTempUser
                 new AntPathRequestMatcher("/activate/**"),
                 new AntPathRequestMatcher("/api/auth/activate-email")

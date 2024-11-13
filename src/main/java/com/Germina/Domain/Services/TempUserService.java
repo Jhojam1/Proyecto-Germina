@@ -30,9 +30,9 @@ public class TempUserService {
      * Guardar o actualizar un Usuario Temporal.
      */
     public TempUserDTO save(TempUserDTO tempUserDTO) {
-        UserTemp Tempuser = TempUserMapper.toEntity(tempUserDTO);
-        tempUserRepository.save(Tempuser);
-        return tempUserDTO;
+        UserTemp tempUser = TempUserMapper.toEntity(tempUserDTO);
+        UserTemp savedUser = tempUserRepository.save(tempUser);
+        return TempUserMapper.toDto(savedUser);
     }
 
     /**
